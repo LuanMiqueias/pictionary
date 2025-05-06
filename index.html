@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imagem e Ação</title>
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>🎨 Jogo Imagem & Ação</h1>
+    <div class="score">
+      <div id="equipe1"><span class="equipe_bullet equipe1_bullet" id=""></span>0 pts</div>
+      <div id="equipe2"><span class="equipe_bullet equipe2_bullet" id="equipe2-bullet"></span> 0 pts</div>
+    </div>
+    <p>Rodada da equipe <span id="equipeAtual">1</span></p>
+    <div id="controls">
+      <button onclick="sortearPalavras()">🎲 Sortear palavras</button>
+    </div>
+    <div id="palavras"></div>
+    <audio id="tick" src="./sounds/tick.mp3"></audio>
+    <audio id="sirene" src="./sounds/sirene.mp3"></audio>
+  </div>
+
+  <script>
+    const TEMPO_RODADA = 60;
+    const PONTOS_POR_ACERTO = 10;
+    const PONTOS_VITORIA = 200;
+
+    let equipeAtual = 1;
+    let pontuacoes = { equipe1: 0, equipe2: 0 };
+    let tempo = TEMPO_RODADA;
+    let palavrasRodada = [];
+    let timer;
+
+    const palavras = [
+      { palavra: "Cachorro", categoria: "Animal", dificuldade: "fácil" },
+      { palavra: "Montanha", categoria: "Natureza", dificuldade: "média" },
+      { palavra: "Helicóptero", categoria: "Transporte", dificuldade: "difícil" },
+      { palavra: "Computador", categoria: "Tecnologia", dificuldade: "fácil" },
+      { palavra: "Pintor", categoria: "Profissão", dificuldade: "média" },
+    ];
+
+    function sortearPalavras() {
+      palavrasRodada = palavras.sort(() => 0.5 - Math.random()).slice(0, 3);
+      exibirPalavras();
+      tempo = TEMPO_RODADA;
+      iniciarTimer();
+    }
+
+    function exibirPalavras() {
+      const container = document.getElementById("palavras");
+      container.innerHTML = `
+        <ul class="word-list">
+          ${palavrasRodada.map(p => `<li>${p.palavra} (${p.categoria}, ${p.dificuldade})</li>`).join('')}
+        </ul>
+        <div class="timer" id="timer">⏱️ ${tempo}s</div>
+        <button onclick="finalizarRodada()">⏹️ Finalizar rodada</button>
+      `;
+    }
+
+    function iniciarTimer() {
+      clearInterval(timer);
+      const tick = document.getElementById("tick");
+      const sirene = document.getElementById("sirene");
+      timer = setInterval(() => {
+        tempo--;
+        document.getElementById("timer").textContent = `⏱️ ${tempo}s`;
+        if (tempo <= 60 && tempo > 0) tick.play();
+        if (tempo <= 11 && tempo > 0) {
+          sirene.play();
+          tick.pause();
+        }
+        if (tempo === 0) {
+          clearInterval(timer);
+
+          solicitarAcertos();
+        }
+      }, 1000);
+    }
+
+    function finalizarRodada() {
+      clearInterval(timer);
+      solicitarAcertos();
+    }
+
+    function solicitarAcertos() {
+      const container = document.getElementById("controls");
+      container.innerHTML = '<p>Quantas palavras foram acertadas?</p>' +
+        [0, 1, 2, 3].map(i => `<button onclick="registrarAcertos(${i})">${i}</button>`).join('');
+    }
+
+    function registrarAcertos(qtd) {
+      const chave = `equipe${equipeAtual}`;
+      pontuacoes[chave] += qtd * PONTOS_POR_ACERTO;
+      document.getElementById("equipe1").textContent = `Equipe 1: ${pontuacoes.equipe1} pts`;
+      document.getElementById("equipe2").textContent = `Equipe 2: ${pontuacoes.equipe2} pts`;
+
+      if (pontuacoes[chave] >= PONTOS_VITORIA) {
+        document.getElementById("controls").innerHTML = `<h2>🎉 Equipe ${equipeAtual} venceu! 🎉</h2><button onclick="reiniciar()">Reiniciar</button>`;
+        document.getElementById("palavras").innerHTML = "";
+      } else {
+        equipeAtual = equipeAtual === 1 ? 2 : 1;
+        document.getElementById("equipeAtual").textContent = equipeAtual;
+        document.getElementById("controls").innerHTML = '<button onclick="sortearPalavras()">🎲 Sortear palavras</button>';
+        document.getElementById("palavras").innerHTML = "";
+      }
+    }
+
+    function reiniciar() {
+      equipeAtual = 1;
+      pontuacoes = { equipe1: 0, equipe2: 0 };
+      document.getElementById("equipe1").textContent = `Equipe 1: 0 pts`;
+      document.getElementById("equipe2").textContent = `Equipe 2: 0 pts`;
+      document.getElementById("equipeAtual").textContent = equipeAtual;
+      document.getElementById("controls").innerHTML = '<button onclick="sortearPalavras()">🎲 Sortear palavras</button>';
+      document.getElementById("palavras").innerHTML = "";
+    }
+  </script>
+</body>
+
+</html>

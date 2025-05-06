@@ -1,0 +1,100 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 1rem;
+  background: #f0f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 3rem;
+}
+
+.score {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.score > div {
+  display: flex;
+  justify-content: space-around;
+  gap:4px
+}
+.equipe_bullet{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.equipe_bullet.equipe1_bullet{
+  background: rgb(63, 63, 63);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.equipe_bullet.equipe2_bullet{
+  background: rgb(45, 111, 211);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.timer {
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: #ffeaa7;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  margin: 1rem 0;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+button {
+  margin: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  border-radius: 0.6rem;
+  border: 2px solid #000000;
+  background: none;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #74b9ff;
+}
+
+.word-list {
+  text-align: left;
+  padding: 0;
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.word-list li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #ccc;
+}
